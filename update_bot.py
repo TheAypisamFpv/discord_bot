@@ -3,7 +3,7 @@ import time
 
 
 
-url = "https://discord.com/api/webhooks/1036092187588448389/tcfUB7dqxX_No4ZAHQqK8tdt1tZueqgEkkoQlwjsf8r63UwOQLVQtsXFqcD-hKqz_Ost"
+url = "********************************"
 
 
 data = {
