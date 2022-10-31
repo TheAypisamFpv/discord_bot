@@ -2,8 +2,7 @@ import requests
 import time
 
 
-
-url = "********************************"
+url = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
 
 
 data = {
@@ -30,194 +29,9 @@ data = {
 null = None
 false = False
 
-# response_ = [
-#     {
-#         "code":"4090524",
-#         "title":"Travail de groupe",
-#         "allDay":false,
-#         "nightly":false,
-#         "start":"2022-10-28T09:00:00+02",
-#         "end":"2022-10-28T12:30:00+02",
-#         "url":"",
-#         "nomModule":"",
-#         "matiere":null,
-#         "theme":"",
-#         "salles":[
-#             {
-#                 "nomSalle":"N102"
-#             },
-#             {
-#                 "nomSalle":"N104A CPI A2"
-#             },
-#             {
-#                 "nomSalle":"N104B CPI A2"
-#             }
-#         ],
-#         "intervenants":[
-#             {
-#                 "sousTitre":null,
-#                 "profils":null,
-#                 "groupesPedagogiques":null,
-#                 "urlFiche":"https://ent.cesi.fr/servlet/urlfiche?OBJET=PERSONNE&CODE=1228634&LANGUE=0",
-#                 "urlPhoto":"https://ent.cesi.fr/images/fo/avatar-homme.jpg",
-#                 "nom":"AMAMOU",
-#                 "prenom":"Mohamed",
-#                 "code":"1228634",
-#                 "adresseMail":"",
-#                 "urlAgenda":"",
-#                 "sessions":[],
-#                 "inconnu":false
-#             }
-#         ],
-#         "participantsPersonne":null,
-#         "participants":[
-#             {
-#                 "libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète",
-#                 "codeGroupe":"155923",
-#                 "codeSession":"2182217"
-#             }
-#         ]
-#     },
-#     {
-#         "code":"4107205",
-#         "title":"Prosit aller",
-#         "allDay":false,
-#         "nightly":false,
-#         "start":"2022-10-28T13:30:00+02",
-#         "end":"2022-10-28T15:00:00+02",
-#         "url":"",
-#         "nomModule":"",
-#         "matiere":null,
-#         "theme":"",
-#         "salles":[
-#             {
-#                 "nomSalle":"N102"
-#             }
-#         ],
-#         "intervenants":[
-#             {
-#                 "sousTitre":null,
-#                 "profils":null,
-#                 "groupesPedagogiques":null,
-#                 "urlFiche":"https://ent.cesi.fr/servlet/urlfiche?OBJET=PERSONNE&CODE=2430574&LANGUE=0",
-#                 "urlPhoto":"https://ent.cesi.fr/images/fo/avatar-homme.jpg",
-#                 "nom":"MAHIEU",
-#                 "prenom":"Romain",
-#                 "code":"2430574",
-#                 "adresseMail":"",
-#                 "urlAgenda":"",
-#                 "sessions":[],
-#                 "inconnu":false
-#             }
-#         ],
-#         "participantsPersonne":null,
-#         "participants":[
-#             {
-#                 "libelleGroupe":"CPI A1 22-23 Rouen - Bloc Electronique - Groupe Romain - N 102",
-#                 "codeGroupe":"182358","codeSession":"2182217"
-#             }
-#         ]
-#     },
-#     {
-#         "code":"4107209",
-#         "title":"Travail de groupe",
-#         "allDay":false,
-#         "nightly":false,
-#         "start":"2022-10-28T15:00:00+02",
-#         "end":"2022-10-28T16:00:00+02",
-#         "url":"",
-#         "nomModule":"",
-#         "matiere":null,
-#         "theme":"",
-#         "salles":[
-#             {
-#                 "nomSalle":"N102"
-#             }
-#         ],
-#         "intervenants":null,
-#         "participantsPersonne":null,
-#         "participants":[
-#             {
-#                 "libelleGroupe":"CPI A1 22-23 Rouen - Bloc Electronique - Groupe Romain - N 102",
-#                 "codeGroupe":"182358",
-#                 "codeSession":"2182217"
-#             }
-#         ]
-#     }
-# ]
+response_ = [{"code":"4019671","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-07T09:30:00+01","end":"2022-11-07T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019672","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-07T13:30:00+01","end":"2022-11-07T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"},{"nomSalle":"N214B FISA"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019719","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T09:00:00+01","end":"2022-11-08T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019720","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T13:30:00+01","end":"2022-11-08T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019721","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-09T09:00:00+01","end":"2022-11-09T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4058695","title":"Travail de groupe","allDay":false,"nightly":false,"start":"2022-11-09T13:30:00+01","end":"2022-11-09T17:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Autonomie - Anglais","codeGroupe":"181277","codeSession":"2182217"}]},{"code":"4054982","title":"Anglais","allDay":false,"nightly":false,"start":"2022-11-09T15:00:00+01","end":"2022-11-09T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"S224 Poly"}],"intervenants":[{"sousTitre":null,"profils":null,"groupesPedagogiques":null,"urlFiche":"https://ent.cesi.fr/servlet/urlfiche?OBJET=PERSONNE&CODE=2194170&LANGUE=0","urlPhoto":"https://ent.cesi.fr/images/fo/avatar-homme.jpg","nom":"SMITH","prenom":"Ian","code":"2194170","adresseMail":"","urlAgenda":"","sessions":[],"inconnu":false}],"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Anglais - Groupe 6","codeGroupe":"180851","codeSession":"2182217"}]}]
 
 
-response_ = [
-    {
-        "code":"4019671",
-        "title":"A planifier",
-        "allDay":false,
-        "nightly":false,
-        "start":"2022-11-07T09:30:00+01",
-        "end":"2022-11-07T12:30:00+01",
-        "url":"",
-        "nomModule":"",
-        "matiere":null,
-        "theme":"",
-        "salles":[
-            {
-                "nomSalle":"N102"
-            },
-            {
-                "nomSalle":"N104A CPI A2"
-            },
-            {
-                "nomSalle":"N104B CPI A2"
-            }
-        ],
-        "intervenants":null,
-        "participantsPersonne":null,
-        "participants":[
-            {
-                "libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète",
-                "codeGroupe":"155923",
-                "codeSession":"2182217"
-            }
-        ]
-    },
-    {
-        "code":"4019672",
-        "title":"A planifier",
-        "allDay":false,
-        "nightly":false,
-        "start":"2022-11-07T13:30:00+01",
-        "end":"2022-11-07T16:30:00+01",
-        "url":"",
-        "nomModule":"",
-        "matiere":null,
-        "theme":"",
-        "salles":[
-            {
-                "nomSalle":"N102"
-            },
-            {
-                "nomSalle":"N104A CPI A2"
-            },
-            {
-                "nomSalle":"N104B CPI A2"
-            },
-            {
-                "nomSalle":"N214B FISA"
-            }
-        ],
-        "intervenants":null,
-        "participantsPersonne":null,
-        "participants":[
-            {
-                "libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète",
-                "codeGroupe":"155923",
-                "codeSession":"2182217"
-            }
-        ]
-    },
-    {
-        "code":"4019719","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T09:00:00+01","end":"2022-11-08T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019720","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T13:30:00+01","end":"2022-11-08T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019721","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-09T09:00:00+01","end":"2022-11-09T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4058695","title":"Travail de groupe","allDay":false,"nightly":false,"start":"2022-11-09T13:30:00+01","end":"2022-11-09T17:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Autonomie - Anglais","codeGroupe":"181277","codeSession":"2182217"}]},{"code":"4054982","title":"Anglais","allDay":false,"nightly":false,"start":"2022-11-09T15:00:00+01","end":"2022-11-09T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"S224 Poly"}],"intervenants":[{"sousTitre":null,"profils":null,"groupesPedagogiques":null,"urlFiche":"https://ent.cesi.fr/servlet/urlfiche?OBJET=PERSONNE&CODE=2194170&LANGUE=0","urlPhoto":"https://ent.cesi.fr/images/fo/avatar-homme.jpg","nom":"SMITH","prenom":"Ian","code":"2194170","adresseMail":"","urlAgenda":"","sessions":[],"inconnu":false}],"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Anglais - Groupe 6","codeGroupe":"180851","codeSession":"2182217"}]}]
-  
 
 l_cour_1 = {
 }
@@ -330,33 +144,50 @@ div_Vendredi = [v_cour_1, v_cour_2, v_cour_3, v_cour_4]
 div_day = [div_Lundi, div_Mardi, div_Mercredi, div_Jeudi, div_Vendredi]
 
 Lundi = ""
-
 Mardi = ""
 Mercredi = ""
 Jeudi = ""
 Vendredi = ""
 day = [Lundi, Mardi, Mercredi, Jeudi, Vendredi]
 
-
-d = 0
-h = 0
-
-for d in range(len(div_day)):
-    div = ""
-    for h in range(len(response_)):
-        title = str(response_[h]["title"]) + '\n'
-        hour = str(response_[h]["start"].partition("T")[2].removesuffix(":00+02")) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(":00+02")) + '\n\n'
-        div = div + title + hour
-    day[d] = div
-
 day_name = [
-            "  Lundi ",
-            "  Mardi ",
-            "Mercredi",
-            "  Jeudi ",
-            "Vendredi"]
+    "Lundi",
+    "Mardi",
+    "Mercredi",
+    "Jeudi",
+    "Vendredi"]
+
+day_change = []
+
+i = 0
+for i in range(len(response_)-1):
+    if response_[i]["start"].partition("T")[0] != response_[i+1]["start"].partition("T")[0]:
+        day_change.append(i+1)
+day_change.append(len(response_)+1 )
+
+
+h = 0
+d = 0
+div = ""
+for h in range(len(response_)):
+    if h == day_change[d]:
+        d = d+1
+        div = ""
+    title = str(response_[h]["title"]) + '\n'
+    hour = str(response_[h]["start"].partition("T")[2].removesuffix(":00+01")) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(":00+01")) + '\n\n'
+    div = div + title + hour
+    day[d] = div
+    
 
 d = -1
+
+i = 0
+for i in range(len(day)):
+    if day[i] == "":
+        day[i] = "jour férié"
+
+
+
 
 post_ = True
 
