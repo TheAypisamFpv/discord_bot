@@ -1,205 +1,159 @@
 import requests
+import datetime
 import time
+import json
+from bs4 import BeautifulSoup
+from webbot import Browser
+import locale
+
+locale.setlocale(locale.LC_TIME, 'fr_FR')
+
+debug_ = True
+
+post_ = True
 
 
-url = "******************************************************"
+# ID_message = ["https://discord.com/channels/1017438249494519948/1038800615494656141/1039230514202153021",
+#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230516710350918",
+#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230520279695473",
+#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230523991654561",
+#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230528282443826",
+#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230532820684851"
+# ]
 
 
-data = {
-    "content": "",
-    "username": "Bot agenda",
-    "embeds": [{
-        "type": "rich",
-        "description": " ",
-        "title": " ",
-        "color": 0xdddddd,
-        "fields": [{
-            "name": "",
-            "value": "\u200B"
-            }]
-        }
-    ],
-    "footer":{
-        "text": "",
-        "icon_url": ""
-    }
-}
+if debug_:
+    print('')
 
+response_ = []
 
 null = None
 false = False
 
-response_ = [{"code":"4019671","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-07T09:30:00+01","end":"2022-11-07T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019672","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-07T13:30:00+01","end":"2022-11-07T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"},{"nomSalle":"N214B FISA"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019719","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T09:00:00+01","end":"2022-11-08T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019720","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-08T13:30:00+01","end":"2022-11-08T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4019721","title":"A planifier","allDay":false,"nightly":false,"start":"2022-11-09T09:00:00+01","end":"2022-11-09T12:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Groupe session complète","codeGroupe":"155923","codeSession":"2182217"}]},{"code":"4058695","title":"Travail de groupe","allDay":false,"nightly":false,"start":"2022-11-09T13:30:00+01","end":"2022-11-09T17:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"N102"},{"nomSalle":"N104A CPI A2"},{"nomSalle":"N104B CPI A2"}],"intervenants":null,"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Autonomie - Anglais","codeGroupe":"181277","codeSession":"2182217"}]},{"code":"4054982","title":"Anglais","allDay":false,"nightly":false,"start":"2022-11-09T15:00:00+01","end":"2022-11-09T16:30:00+01","url":"","nomModule":"","matiere":null,"theme":"","salles":[{"nomSalle":"S224 Poly"}],"intervenants":[{"sousTitre":null,"profils":null,"groupesPedagogiques":null,"urlFiche":"https://ent.cesi.fr/servlet/urlfiche?OBJET=PERSONNE&CODE=2194170&LANGUE=0","urlPhoto":"https://ent.cesi.fr/images/fo/avatar-homme.jpg","nom":"SMITH","prenom":"Ian","code":"2194170","adresseMail":"","urlAgenda":"","sessions":[],"inconnu":false}],"participantsPersonne":null,"participants":[{"libelleGroupe":"CPI A1 22-23 Rouen - Anglais - Groupe 6","codeGroupe":"180851","codeSession":"2182217"}]}]
+url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
+url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
+username = 'samuel.courtin@viacesi.fr'
+password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+
+today = datetime.date.today()
+if today.weekday() == 5 or today.weekday() == 6:
+    start_week = today + datetime.timedelta(days= 7 - today.weekday())
+    print("yousk2")
+else:
+    start_week = today - datetime.timedelta(days=today.weekday())
+
+end_week = start_week + datetime.timedelta(days=6)
+
+timezone = str(":00+0" + str(time.localtime().tm_hour - time.gmtime().tm_hour))
+if debug_:
+    print(today.strftime("%d/%m/%Y"), timezone)
+    print(start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
 
 
+def get_cours(_calendar_url_):
+    response_ = ""
+    web = Browser()
+    web.go_to(url)
+    web.type(username, into='login', id='login')
+    web.click('Valider', id='submit')
+    web.type(password, into='Password', id='passwordInput')
+    web.click('Connexion', id='submitButton')
 
-l_cour_1 = {
-}
-l_cour_2 = {
-    "title": "lundi2",
-    "start": "start",
-    "end": "end"
-}
-l_cour_3 = {
-    "title": "lundi3",
-    "start": "start",
-    "end": "end"
-}
-l_cour_4 = {
-    "title": "lundi4",
-    "start": "start",
-    "end": "end"
-}
-div_Lundi = [l_cour_1, l_cour_2, l_cour_3, l_cour_4]
-
-Ma_cour_1 = {
-    "title": "mardi1",
-    "start": "start",
-    "end": "end"
-}
-Ma_cour_2 = {
-    "title": "mardi2",
-    "start": "start",
-    "end": "end"
-}
-Ma_cour_3 = {
-    "title": "Mardi3",
-    "start": "start",
-    "end": "end"
-}
-Ma_cour_4 = {
-    "title": "Mardi4",
-    "start": "start",
-    "end": "end"
-}
-div_Mardi = [Ma_cour_1, Ma_cour_2, Ma_cour_3, Ma_cour_4]
-
-Me_cour_1 = {
-    "title": "Mercredi1",
-    "start": "start",
-    "end": "end"
-}
-Me_cour_2 = {
-    "title": "Mercredi2",
-    "start": "start",
-    "end": "end"
-}
-Me_cour_3 = {
-    "title": "Mercredi3",
-    "start": "start",
-    "end": "end"
-}
-Me_cour_4 = {
-    "title": "Mercredi4",
-    "start": "start",
-    "end": "end"
-}
-div_Mercredi = [Me_cour_1, Me_cour_2, Me_cour_3, Me_cour_4]
-
-j_cour_1 = {
-    "title": "Jeudi1",
-    "start": "start",
-    "end": "end"
-}
-j_cour_2 = {
-    "title": "Jeudi2",
-    "start": "start",
-    "end": "end"
-}
-j_cour_3 = {
-    "title": "Jeudi3",
-    "start": "start",
-    "end": "end"
-}
-j_cour_4 = {
-    "title": "Jeudi4",
-    "start": "start",
-    "end": "end"
-}
-div_Jeudi = [j_cour_1, j_cour_2, j_cour_3, j_cour_4]
-
-v_cour_1 = {
-    "title": "Vendredi1",
-    "start": "start",
-    "end": "end"
-}
-v_cour_2 = {
-    "title": "Vendredi2",
-    "start": "start",
-    "end": "end"
-}
-v_cour_3 = {
-    "title": "Vendredi3",
-    "start": "start",
-    "end": "end"
-}
-v_cour_4 = {
-    "title": "Vendredi4",
-    "start": "start",
-    "end": "end"
-}
-div_Vendredi = [v_cour_1, v_cour_2, v_cour_3, v_cour_4]
+    web.go_to(_calendar_url_)
+    time.sleep(1)
+    if web.get_current_url() == _calendar_url_:
+        if debug_:
+            print("good url")
+        content = web.get_page_source()
+        response_ = BeautifulSoup(content, features="html.parser").get_text()
+        response_ = json.loads(response_)
+        if debug_:
+            print(response_.__class__)
+            print(response_)
+        return response_, True
+    else:
+        print("--ERROR--  bad _calendar_url_")
+        return response_, False
 
 
-div_day = [div_Lundi, div_Mardi, div_Mercredi, div_Jeudi, div_Vendredi]
+def updatebot():
 
-Lundi = ""
-Mardi = ""
-Mercredi = ""
-Jeudi = ""
-Vendredi = ""
-day = [Lundi, Mardi, Mercredi, Jeudi, Vendredi]
+    data = {
+        "content": "",
+        "username": "Bot agenda",
+        "message_reference": {
+            "message_id": "",
+            "fail_if_not_exists": True
+        },
+        "embeds": [{
+            "type": "rich",
+            "description": " ",
+            "title": " ",
+            "color": 0xdddddd,
+            "fields": [{
+                "name": "",
+                "value": "\u200B"
+                }]
+            }
+        ],
+        "footer": {
+            "text": "",
+            "icon_url": ""
+        }
+    }
 
-day_name = [
-    "Lundi",
-    "Mardi",
-    "Mercredi",
-    "Jeudi",
-    "Vendredi"]
-
-day_change = []
-
-i = 0
-for i in range(len(response_)-1):
-    if response_[i]["start"].partition("T")[0] != response_[i+1]["start"].partition("T")[0]:
-        day_change.append(i+1)
-day_change.append(len(response_)+1 )
-
-
-h = 0
-d = 0
-div = ""
-for h in range(len(response_)):
-    if h == day_change[d]:
-        d = d+1
-        div = ""
-    title = str(response_[h]["title"]) + '\n'
-    hour = str(response_[h]["start"].partition("T")[2].removesuffix(":00+01")) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(":00+01")) + '\n\n'
-    div = div + title + hour
-    day[d] = div
-    
-
-d = -1
-
-i = 0
-for i in range(len(day)):
-    if day[i] == "":
-        day[i] = "jour férié"
+    Lundi = ""
+    Mardi = ""
+    Mercredi = ""
+    Jeudi = ""
+    Vendredi = ""
+    day = [Lundi, Mardi, Mercredi, Jeudi, Vendredi]
 
 
+    day_change = []
+
+    i = 0
+    for i in range(len(response_)-1):
+        if response_[i]["start"].partition("T")[0] != response_[int(i+1)]["start"].partition("T")[0]:
+            day_change.append(i+1)
+    day_change.append(len(response_)+1 )
 
 
-post_ = True
+    h = 0
+    d = 0
+    div = ""
+    for h in range(len(response_)):
+        if h == day_change[d]:
+            d = d+1
+            div = ""
+        title = str(response_[h]["title"]) + '\n'
+        hour = str(response_[h]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
 
-if post_:
+        if title == "Anglais\n":
+            title = "Anglais (en fonction de votre groupe)\n"
+            hour = '13:30 - 16:30 \n'
+        if title == "Soutenance - Exposé\n":
+            title = "Soutenance - Exposé (en fonction de votre groupe)\n"
+        div = div + title + hour
+        day[d] = div
+        
+
+    i = 0
+    for i in range(len(day)):
+        if day[i] == "":
+            day[i] = "jour férié"
+
+    d = -1
+
     for d in range(d,len(day)):  
 
         if d == -1:
             data["embeds"] = [
                 {
                     "type": "rich",
-                    "title": "Emploi du temps de la semaine:",
-                    "color": 0xFBE214
+                    "title": "Emploi du temps de la semaine n°{} ({} - {}) :".format(start_week.isocalendar().week, start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y")),
+                    "color": 0xFBE214,
+                    # "url": ID_message[d]
                     }
                 ]
         elif d >= 0:
@@ -207,8 +161,9 @@ if post_:
                 {
                     "type": "rich",
                     "description": "",
-                    "title": day_name[d],
+                    "title": "__"+( start_week + datetime.timedelta(days=d) ).strftime("%A %d %B")+"__",
                     "color": 0xDDDDDD,
+                    # "url": ID_message[d],
                     "fields": [
                         {
                             "name": day[d],
@@ -217,22 +172,38 @@ if post_:
                     ],
                 }
             ]
-        elif d == 4:
-            print("yousk2")
+        if d == 4:
             data["footer"] = {
                 "text": "source: https://ent.cesi.fr/api/seance/",
                 "icon_url": "https://yt3.ggpht.com/ytc/AMLnZu-r9SK3rtCm-hF3UlW1nolyr8mIBJS10FBnIKFDHw=s900-c-k-c0x00ffffff-no-rj"
                 }
 
 
-        result = requests.post(url, json=data)
-
-        try:
-            result.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
+        
+        if post_:
+            result = requests.post(url_bot, json=data)
+            try:
+                result.raise_for_status()
+            except requests.exceptions.HTTPError as err:
+                print("--ERROR--  ", err)
+            else:
+                if debug_:
+                    print("Payload delivered successfully, code {}.".format(result.status_code))
+                    print(d)
         else:
-            print("Payload delivered successfully, code {}.".format(result.status_code))
-            print(d)
+            print("--ERROR--  post_ is set to {}".format(post_))
             
         d+1
+
+
+calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
+if debug_:
+    print(calendar_url)
+response_, is_good = get_cours(calendar_url)
+if is_good == True:
+    updatebot()
+    if debug_:
+        print("bonne chance pour cette semaine")
+
+if debug_:
+    print('')
