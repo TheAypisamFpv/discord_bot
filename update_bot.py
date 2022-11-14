@@ -30,10 +30,10 @@ response_ = []
 null = None
 false = False
 
-url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
-url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
+url_bot = "***********************************************************************************************"
+url = "***********************************************************************************************"
 username = 'samuel.courtin@viacesi.fr'
-password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+password = '"***********************'
 
 today = datetime.date.today()
 if today.weekday() == 5 or today.weekday() == 6:
