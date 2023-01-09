@@ -1,10 +1,12 @@
-import requests
 import datetime
-import time
 import json
+import locale
+import time
+
+import keyboard
+import requests
 from bs4 import BeautifulSoup
 from webbot import Browser
-import locale
 
 locale.setlocale(locale.LC_TIME, 'fr_FR')
 
@@ -12,6 +14,8 @@ debug_ = True
 
 post_ = True
 
+
+# https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
 
 # ID_message = ["https://discord.com/channels/1017438249494519948/1038800615494656141/1039230514202153021",
 #               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230516710350918",
@@ -30,15 +34,15 @@ response_ = []
 null = None
 false = False
 
-url_bot = "***********************************************************************************************"
-url = "***********************************************************************************************"
+url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
+url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
+url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
 username = 'samuel.courtin@viacesi.fr'
-password = '"***********************'
+password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
 today = datetime.date.today()
 if today.weekday() == 5 or today.weekday() == 6:
     start_week = today + datetime.timedelta(days= 7 - today.weekday())
-    print("yousk2")
 else:
     start_week = today - datetime.timedelta(days=today.weekday())
 
@@ -53,27 +57,34 @@ if debug_:
 def get_cours(_calendar_url_):
     response_ = ""
     web = Browser()
+
     web.go_to(url)
+
     web.type(username, into='login', id='login')
     web.click('Valider', id='submit')
+
     web.type(password, into='Password', id='passwordInput')
     web.click('Connexion', id='submitButton')
 
     web.go_to(_calendar_url_)
-    time.sleep(1)
-    if web.get_current_url() == _calendar_url_:
-        if debug_:
-            print("good url")
-        content = web.get_page_source()
-        response_ = BeautifulSoup(content, features="html.parser").get_text()
-        response_ = json.loads(response_)
-        if debug_:
-            print(response_.__class__)
-            print(response_)
-        return response_, True
-    else:
-        print("--ERROR--  bad _calendar_url_")
+    request_code = requests.get(_calendar_url_).status_code
+
+    if request_code != requests.codes.ok:
+        print(f"\nError {request_code}")
+        send_email(request_code, _calendar_url_, web)
+
         return response_, False
+
+    if debug_:
+        print("good url")
+
+    content = web.get_page_source()
+    response_ = BeautifulSoup(content, features="html.parser").get_text()
+    response_ = json.loads(response_)
+    if debug_:
+        print(response_.__class__)
+        print(response_)
+    return response_, True
 
 
 def updatebot():
@@ -196,14 +207,60 @@ def updatebot():
         d+1
 
 
-calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
-if debug_:
-    print(calendar_url)
-response_, is_good = get_cours(calendar_url)
-if is_good == True:
-    updatebot()
-    if debug_:
-        print("bonne chance pour cette semaine")
+def send_email(error_code: int, url: str, web) -> None:
+    
+    mdp = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+    user = 'samuel.courtin@viacesi.fr'
+    to = 'the.aypisam.64@gmail.com'
 
-if debug_:
-    print('')
+    print("envoie de l'email...")
+
+    message = f"Ceci est un message automatique.\n----------\nConnexion à l'url '{url}' s'est terminé par un code d'erreur {error_code}\n----------\n\n-Detroit Become Human"
+
+    print(message)
+    web.go_to('https://outlook.office.com/')
+
+    web.type(user)
+    keyboard.press_and_release('enter')
+    time.sleep(1)
+
+    web.type(mdp)
+    keyboard.press_and_release('enter')
+    time.sleep(200)
+    # keyboard.press_and_release('tab')
+    # keyboard.press_and_release('tab')
+    # keyboard.press_and_release('tab')
+    # keyboard.press_and_release('enter')
+    # time.sleep(1)
+    web.go_to('https://outlook.office.com/compose')
+    time.sleep(5)
+    keyboard.write(to)
+    keyboard.press_and_release('tab')
+    keyboard.press_and_release('tab')
+    keyboard.write('Connexion impossible')
+    keyboard.press_and_release('tab')
+    keyboard.write(message)
+    keyboard.press_and_release('enter')
+
+    pass
+
+
+
+
+
+def main():
+    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
+    if debug_:
+        print(calendar_url)
+    response_, is_good = get_cours(calendar_url)
+    if is_good == True:
+        updatebot()
+        if debug_:
+            print("bonne chance pour cette semaine")
+
+    if debug_:
+        print('')
+
+
+
+main()
