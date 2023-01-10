@@ -69,11 +69,11 @@ def get_cours(_calendar_url_):
     web.go_to(_calendar_url_)
     request_code = requests.get(_calendar_url_).status_code
 
-    if request_code != requests.codes.ok:
-        print(f"\nError {request_code}")
-        send_email(request_code, _calendar_url_, web)
+    # if request_code != requests.codes.ok:
+    #     print(f"\nError {request_code}")
+    #     send_email(request_code, _calendar_url_, web)
 
-        return response_, False
+    #     return response_, False
 
     if debug_:
         print("good url")
@@ -87,7 +87,7 @@ def get_cours(_calendar_url_):
     return response_, True
 
 
-def updatebot():
+def updatebot(response_):
 
     data = {
         "content": "",
@@ -208,7 +208,7 @@ def updatebot():
 
 
 def send_email(error_code: int, url: str, web) -> None:
-    
+    return 
     mdp = 'HRBbESMTq78chNr4qh9i8pxREftyG'
     user = 'samuel.courtin@viacesi.fr'
     to = 'the.aypisam.64@gmail.com'
@@ -254,7 +254,7 @@ def main():
         print(calendar_url)
     response_, is_good = get_cours(calendar_url)
     if is_good == True:
-        updatebot()
+        updatebot(response_)
         if debug_:
             print("bonne chance pour cette semaine")
 
