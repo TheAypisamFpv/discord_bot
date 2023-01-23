@@ -123,15 +123,12 @@ def updatebot(response_):
 
     day_change = []
 
-    i = 0
     for i in range(len(response_)-1):
         if response_[i]["start"].partition("T")[0] != response_[int(i+1)]["start"].partition("T")[0]:
             day_change.append(i+1)
     day_change.append(len(response_)+1 )
 
 
-    h = 0
-    d = 0
     div = ""
     for h in range(len(response_)):
         if h == day_change[d]:
@@ -149,14 +146,13 @@ def updatebot(response_):
         day[d] = div
         
 
-    i = 0
+
     for i in range(len(day)):
         if day[i] == "":
             day[i] = "jour férié"
 
-    d = -1
 
-    for d in range(d,len(day)):  
+    for d in range(-1,len(day)):  
 
         if d == -1:
             data["embeds"] = [
@@ -190,7 +186,9 @@ def updatebot(response_):
                 }
 
 
-        
+        if debug_:
+            print(data["embeds"],'\n')
+
         if post_:
             result = requests.post(url_bot, json=data)
             try:
