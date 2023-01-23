@@ -42,7 +42,7 @@ password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
 today = datetime.date.today()
 if today.weekday() == 5 or today.weekday() == 6:
-    start_week = today + datetime.timedelta(days= 7 - today.weekday())
+    start_week = today + datetime.timedelta(days=7 - today.weekday())
 else:
     start_week = today - datetime.timedelta(days=today.weekday())
 
@@ -104,8 +104,8 @@ def updatebot(response_):
             "fields": [{
                 "name": "",
                 "value": "\u200B"
-                }]
-            }
+            }]
+        }
         ],
         "footer": {
             "text": "",
@@ -120,14 +120,12 @@ def updatebot(response_):
     Vendredi = ""
     day = [Lundi, Mardi, Mercredi, Jeudi, Vendredi]
 
-
     day_change = []
 
     for i in range(len(response_)-1):
         if response_[i]["start"].partition("T")[0] != response_[int(i+1)]["start"].partition("T")[0]:
             day_change.append(i+1)
-    day_change.append(len(response_)+1 )
-
+    day_change.append(len(response_)+1)
 
     div = ""
     for h in range(len(response_)):
@@ -135,7 +133,8 @@ def updatebot(response_):
             d = d+1
             div = ""
         title = str(response_[h]["title"]) + '\n'
-        hour = str(response_[h]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        hour = str(response_[h]["start"].partition("T")[2].removesuffix(
+            timezone)) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
 
         if title == "Anglais\n":
             title = "Anglais (en fonction de votre groupe)\n"
@@ -144,15 +143,12 @@ def updatebot(response_):
             title = "Soutenance - Exposé (en fonction de votre groupe)\n"
         div = div + title + hour
         day[d] = div
-        
-
 
     for i in range(len(day)):
         if day[i] == "":
             day[i] = "jour férié"
 
-
-    for d in range(-1,len(day)):  
+    for d in range(-1, len(day)):
 
         if d == -1:
             data["embeds"] = [
@@ -161,14 +157,14 @@ def updatebot(response_):
                     "title": "Emploi du temps de la semaine n°{} ({} - {}) :".format(start_week.isocalendar().week, start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y")),
                     "color": 0xFBE214,
                     # "url": ID_message[d]
-                    }
-                ]
+                }
+            ]
         elif d >= 0:
             data["embeds"] = [
                 {
                     "type": "rich",
                     "description": "",
-                    "title": "__"+( start_week + datetime.timedelta(days=d) ).strftime("%A %d %B")+"__",
+                    "title": "__"+(start_week + datetime.timedelta(days=d)).strftime("%A %d %B")+"__",
                     "color": 0xDDDDDD,
                     # "url": ID_message[d],
                     "fields": [
@@ -183,11 +179,10 @@ def updatebot(response_):
             data["footer"] = {
                 "text": "source: https://ent.cesi.fr/api/seance/",
                 "icon_url": "https://yt3.ggpht.com/ytc/AMLnZu-r9SK3rtCm-hF3UlW1nolyr8mIBJS10FBnIKFDHw=s900-c-k-c0x00ffffff-no-rj"
-                }
-
+            }
 
         if debug_:
-            print(data["embeds"],'\n')
+            print(data["embeds"], '\n')
 
         if post_:
             result = requests.post(url_bot, json=data)
@@ -197,16 +192,17 @@ def updatebot(response_):
                 print("--ERROR--  ", err)
             else:
                 if debug_:
-                    print("Payload delivered successfully, code {}.".format(result.status_code))
+                    print("Payload delivered successfully, code {}.".format(
+                        result.status_code))
                     print(d)
         else:
             print("--ERROR--  post_ is set to {}".format(post_))
-            
+
         d+1
 
 
 def send_email(error_code: int, url: str, web) -> None:
-    return 
+    return
     mdp = 'HRBbESMTq78chNr4qh9i8pxREftyG'
     user = 'samuel.courtin@viacesi.fr'
     to = 'the.aypisam.64@gmail.com'
@@ -243,11 +239,9 @@ def send_email(error_code: int, url: str, web) -> None:
     pass
 
 
-
-
-
 def main():
-    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
+    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(
+        start_week, end_week)
     if debug_:
         print(calendar_url)
     response_, is_good = get_cours(calendar_url)
@@ -258,7 +252,6 @@ def main():
 
     if debug_:
         print('')
-
 
 
 main()
