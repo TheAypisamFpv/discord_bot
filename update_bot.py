@@ -12,7 +12,7 @@ locale.setlocale(locale.LC_TIME, 'fr_FR')
 
 debug_ = True
 
-post_ = True
+post_ = False
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
@@ -35,8 +35,11 @@ null = None
 false = False
 
 url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
+url_bot_en = "https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc"
+
 url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
 url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
+
 username = 'samuel.courtin@viacesi.fr'
 password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
@@ -128,10 +131,12 @@ def updatebot(response_):
     day_change.append(len(response_)+1)
 
     div = ""
+    d = 0
     for h in range(len(response_)):
         if h == day_change[d]:
             d = d+1
             div = ""
+        room = str(response_[h]['salles'][0]['nomSalle'])
         title = str(response_[h]["title"]) + '\n'
         hour = str(response_[h]["start"].partition("T")[2].removesuffix(
             timezone)) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
@@ -139,6 +144,7 @@ def updatebot(response_):
         if title == "Anglais\n":
             title = "Anglais (en fonction de votre groupe)\n"
             hour = '13:30 - 16:30 \n'
+            english_room = room
         if title == "Soutenance - Exposé\n":
             title = "Soutenance - Exposé (en fonction de votre groupe)\n"
         div = div + title + hour
@@ -199,6 +205,55 @@ def updatebot(response_):
             print("--ERROR--  post_ is set to {}".format(post_))
 
         d+1
+    data_en = {
+        "content": "",
+        "username": "Bot agenda",
+        "message_reference": {
+            "message_id": "",
+            "fail_if_not_exists": True
+        },
+        "embeds": [{
+            "type": "rich",
+            "description": " ",
+            "title": " ",
+            "color": 0xFBE214,
+            "fields": [{
+                "name": "",
+                "value": "\u200B"
+            }]
+        }
+        ],
+        "footer": {
+            "text": "",
+            "icon_url": ""
+        }
+    }
+
+    data_en["embeds"] = [
+        {
+            "type": "rich",
+            "description": "",
+            "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B")+"__",
+            "color": 0xFBE214,
+            # "url": ID_message[d],
+            "fields": [
+                {
+                    "name": f' Anglais\nSalle {english_room}',
+                    "value": "\u200B"
+                    }
+                ],
+            }
+        ]
+
+    if not post_:
+        result = requests.post(url_bot_en, json=data_en)
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print("--ERROR--  ", err)
+        else:
+            if debug_:
+                print("Payload delivered successfully, code {}.".format(result.status_code))
 
 
 def send_email(error_code: int, url: str, web) -> None:
