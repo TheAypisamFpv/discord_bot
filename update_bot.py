@@ -259,7 +259,6 @@ def updatebot(response_):
 
 
 def send_email(error_code: int, url: str, web) -> None:
-    return
     mdp = 'HRBbESMTq78chNr4qh9i8pxREftyG'
     user = 'samuel.courtin@viacesi.fr'
     to = 'the.aypisam.64@gmail.com'
@@ -311,4 +310,6 @@ def main():
         print('')
 
 
-main()
+# main()
+web = Browser()
+send_email(404, url=url, web=web)
