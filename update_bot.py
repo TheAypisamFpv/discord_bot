@@ -3,8 +3,8 @@ import json
 import locale
 import time
 
-import keyboard
 import requests
+from redmail import outlook
 from bs4 import BeautifulSoup
 from webbot import Browser
 
@@ -34,6 +34,7 @@ response_ = []
 null = None
 false = False
 
+
 url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
 url_bot_en = "https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc"
 
@@ -42,6 +43,7 @@ url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.
 
 username = 'samuel.courtin@viacesi.fr'
 password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+
 
 today = datetime.date.today()
 if today.weekday() == 5 or today.weekday() == 6:
@@ -57,6 +59,45 @@ if debug_:
     print(start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
 
 
+def check_ent() -> bool:
+    """
+    return True if ent is availble
+    """
+    error_code = requests.get(url).status_code
+    conexion = error_code == requests.codes.ok
+    return conexion, error_code
+
+
+def alert_students(error_code):
+    mess = {
+        "content": "",
+        "username": "Bot agenda",
+        "embeds": [
+            {
+                "type": "rich",
+                "description": "!! ceci est un test !!",
+                "title": "__L'ent CESI n'a pas l'air d'être en ligne__",
+                "color": 0xFBE214,
+                "fields": [
+                    {
+                        "name": f"Error code {error_code}",
+                        "value": "\u200B"
+                    }
+                ]
+            }
+        ]
+    }
+
+    result = requests.post(url_bot_en, json=mess)
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print("--ERROR--  ", err)
+    else:
+        if debug_:
+            print("Payload delivered successfully, code {}.".format(result.status_code))
+
+
 def get_cours(_calendar_url_):
     response_ = ""
     web = Browser()
@@ -70,13 +111,6 @@ def get_cours(_calendar_url_):
     web.click('Connexion', id='submitButton')
 
     web.go_to(_calendar_url_)
-    request_code = requests.get(_calendar_url_).status_code
-
-    # if request_code != requests.codes.ok:
-    #     print(f"\nError {request_code}")
-    #     send_email(request_code, _calendar_url_, web)
-
-    #     return response_, False
 
     if debug_:
         print("good url")
@@ -242,10 +276,10 @@ def updatebot(response_):
                 {
                     "name": f' Anglais\nSalle {english_room}',
                     "value": "\u200B"
-                    }
-                ],
-            }
-        ]
+                }
+            ],
+        }
+    ]
 
     if post_:
         result = requests.post(url_bot_en, json=data_en)
@@ -255,47 +289,64 @@ def updatebot(response_):
             print("--ERROR--  ", err)
         else:
             if debug_:
-                print("Payload delivered successfully, code {}.".format(result.status_code))
+                print("Payload delivered successfully, code {}.".format(
+                    result.status_code))
 
 
-def send_email(error_code: int, url: str, web) -> None:
-    mdp = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+def send_email(error_code: int, url: str) -> None:
+    password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
     user = 'samuel.courtin@viacesi.fr'
-    to = 'the.aypisam.64@gmail.com'
+    receiver = 'the.aypisam.64@gmail.com'
 
     print("envoie de l'email...")
 
     message = f"Ceci est un message automatique.\n----------\nConnexion à l'url '{url}' s'est terminé par un code d'erreur {error_code}\n----------\n\n-Detroit Become Human"
 
-    print(message)
-    web.go_to('https://outlook.office.com/')
+    print('message:', message)
+    outlook.username = user
+    outlook.password = password
 
-    web.type(user)
-    keyboard.press_and_release('enter')
-    time.sleep(1)
+    print('sending email to', receiver)
 
-    web.type(mdp)
-    keyboard.press_and_release('enter')
-    time.sleep(200)
-    # keyboard.press_and_release('tab')
-    # keyboard.press_and_release('tab')
-    # keyboard.press_and_release('tab')
+    outlook.send(
+        receivers=[receiver],
+        subject='Connexion impossible',
+        text=message
+    )
+
+    # print(message)
+    # web.go_to('https://outlook.office.com/')
+
+    # web.type(user)
     # keyboard.press_and_release('enter')
     # time.sleep(1)
-    web.go_to('https://outlook.office.com/compose')
-    time.sleep(5)
-    keyboard.write(to)
-    keyboard.press_and_release('tab')
-    keyboard.press_and_release('tab')
-    keyboard.write('Connexion impossible')
-    keyboard.press_and_release('tab')
-    keyboard.write(message)
-    keyboard.press_and_release('enter')
+
+    # web.type(mdp)
+    # keyboard.press_and_release('enter')
+    # time.sleep(200)
+    # # keyboard.press_and_release('tab')
+    # # keyboard.press_and_release('tab')
+    # # keyboard.press_and_release('tab')
+    # # keyboard.press_and_release('enter')
+    # # time.sleep(1)
+    # web.go_to('https://outlook.office.com/compose')
+    # time.sleep(5)
+    # keyboard.write(to)
+    # keyboard.press_and_release('tab')
+    # keyboard.press_and_release('tab')
+    # keyboard.write('Connexion impossible')
+    # keyboard.press_and_release('tab')
+    # keyboard.write(message)
+    # keyboard.press_and_release('enter')
 
     pass
 
 
 def main():
+    if not check_ent():
+        alert_students()
+        return
+
     calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(
         start_week, end_week)
     if debug_:
@@ -311,5 +362,4 @@ def main():
 
 
 # main()
-web = Browser()
-send_email(404, url=url, web=web)
+alert_students(420)
