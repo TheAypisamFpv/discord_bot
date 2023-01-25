@@ -205,6 +205,8 @@ def updatebot(response_):
             print("--ERROR--  post_ is set to {}".format(post_))
 
         d+1
+
+    # sending for the english channel
     data_en = {
         "content": "",
         "username": "Bot agenda",
@@ -245,7 +247,7 @@ def updatebot(response_):
             }
         ]
 
-    if not post_:
+    if post_:
         result = requests.post(url_bot_en, json=data_en)
         try:
             result.raise_for_status()
