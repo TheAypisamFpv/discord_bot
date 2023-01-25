@@ -36,7 +36,8 @@ false = False
 
 
 url_bot = "https://discord.com/api/webhooks/1036402415383101481/glx28oB9Ug5CdABtutn9_cNclkjdsxA9sER_hp2m6YCKtCVeT65iiJNqNt4ZLn4m5DaQ"
-url_bot_en = "https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc"
+url_bot_english = "https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc"
+url_bot_ent = "https://discord.com/api/webhooks/1067882979755573279/uN0iiImgu5hUN5fS-O2WanxrPILQQKuBV8RwLK4_vOMpiw2s1_-SxLIRsNaB3FIZikhw"
 
 url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
 url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
@@ -88,7 +89,7 @@ def alert_students(error_code):
         ]
     }
 
-    result = requests.post(url_bot_en, json=mess)
+    result = requests.post(url_bot_ent, json=mess)
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
@@ -282,7 +283,7 @@ def updatebot(response_):
     ]
 
     if post_:
-        result = requests.post(url_bot_en, json=data_en)
+        result = requests.post(url_bot_english, json=data_en)
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
