@@ -12,7 +12,7 @@ locale.setlocale(locale.LC_TIME, 'fr_FR')
 
 debug_ = True
 
-post_ = False
+post_ = True
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
@@ -294,53 +294,6 @@ def updatebot(response_):
                     result.status_code))
 
 
-def send_email(error_code: int, url: str) -> None:
-    password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
-    user = 'samuel.courtin@viacesi.fr'
-    receiver = 'the.aypisam.64@gmail.com'
-
-    print("envoie de l'email...")
-
-    message = f"Ceci est un message automatique.\n----------\nConnexion à l'url '{url}' s'est terminé par un code d'erreur {error_code}\n----------\n\n-Detroit Become Human"
-
-    print('message:', message)
-    outlook.username = user
-    outlook.password = password
-
-    print('sending email to', receiver)
-
-    outlook.send(
-        receivers=[receiver],
-        subject='Connexion impossible',
-        text=message
-    )
-
-    # print(message)
-    # web.go_to('https://outlook.office.com/')
-
-    # web.type(user)
-    # keyboard.press_and_release('enter')
-    # time.sleep(1)
-
-    # web.type(mdp)
-    # keyboard.press_and_release('enter')
-    # time.sleep(200)
-    # # keyboard.press_and_release('tab')
-    # # keyboard.press_and_release('tab')
-    # # keyboard.press_and_release('tab')
-    # # keyboard.press_and_release('enter')
-    # # time.sleep(1)
-    # web.go_to('https://outlook.office.com/compose')
-    # time.sleep(5)
-    # keyboard.write(to)
-    # keyboard.press_and_release('tab')
-    # keyboard.press_and_release('tab')
-    # keyboard.write('Connexion impossible')
-    # keyboard.press_and_release('tab')
-    # keyboard.write(message)
-    # keyboard.press_and_release('enter')
-
-    pass
 
 
 def main():
