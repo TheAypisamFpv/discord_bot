@@ -26,6 +26,13 @@ post_ = True
 # ]
 
 
+colors = {
+    "N": 0x2127e8, # North
+    "S": 0xe82127, # South
+    "E": 0x27e821  # East
+}
+
+
 if debug_:
     print('')
 
@@ -227,19 +234,19 @@ def updatebot(response_):
         if debug_:
             print(data["embeds"], '\n')
 
-        if post_:
-            result = requests.post(url_bot, json=data)
-            try:
-                result.raise_for_status()
-            except requests.exceptions.HTTPError as err:
-                print("--ERROR--  ", err)
-            else:
-                if debug_:
-                    print("Payload delivered successfully, code {}.".format(
-                        result.status_code))
-                    print(d)
-        else:
-            print("--ERROR--  post_ is set to {}".format(post_))
+        # if post_:
+        #     result = requests.post(url_bot, json=data)
+        #     try:
+        #         result.raise_for_status()
+        #     except requests.exceptions.HTTPError as err:
+        #         print("--ERROR--  ", err)
+        #     else:
+        #         if debug_:
+        #             print("Payload delivered successfully, code {}.".format(
+        #                 result.status_code))
+        #             print(d)
+        # else:
+        #     print("--ERROR--  post_ is set to {}".format(post_))
 
         d+1
 
@@ -261,26 +268,24 @@ def updatebot(response_):
                 "value": "\u200B"
             }]
         }
-        ],
-        "footer": {
-            "text": "",
-            "icon_url": ""
-        }
+        ]
     }
+
+    english_room_color = colors[english_room[0]]
 
     data_en["embeds"] = [
         {
             "type": "rich",
             "description": "",
             "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B")+"__",
-            "color": 0xFBE214,
+            "color": english_room_color,
             # "url": ID_message[d],
             "fields": [
                 {
                     "name": f' Anglais\nSalle {english_room}',
                     "value": "\u200B"
                 }
-            ],
+            ]
         }
     ]
 
@@ -293,8 +298,7 @@ def updatebot(response_):
                 print("--ERROR--  ", err)
             else:
                 if debug_:
-                    print("Payload delivered successfully, code {}.".format(
-                        result.status_code))
+                    print("Payload delivered successfully, code {}.".format(result.status_code))
 
 
 
@@ -304,8 +308,7 @@ def main():
         alert_students()
         return
 
-    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(
-        start_week, end_week)
+    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
     if debug_:
         print(calendar_url)
     response_, is_good = get_cours(calendar_url)
