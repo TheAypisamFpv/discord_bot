@@ -1,26 +1,53 @@
 # import requests  # dependency
 
-# # webhook url, from here: https://i.imgur.com/f9XnAew.png
-# url = "https://discord.com/api/webhooks/1067913290761654404/biC9E1gE6AIMs0TRCLXiOmAERYoJL3F6bLXyXXk_0vuOC8iza4n363m2zdTy404FQemh"
+global mentions
+mentions = {
+    "@Myself": "<@390466864356130817>",
+    "@everyone": "<@&1034789618626854972>",
+    "@Admins": "<@&1034789794422726726>"
+}
 
+print('\nMentions:')
+for mention in mentions:
+    print('-',mention)
 
-# while True:
-#     #for all params, see https://discordapp.com/developers/docs/resources/webhook#execute-webhook
-#     data = {
-#         "content": '<@&1067546567105589358>',
-#         "embeds": [
-#             {
-#                 "type": "rich",
-#                 "description": "<@390466864356130817> est un incompétant",
-#                 "title": "ceci est un test de @",
-#                 "color": 0xFBE214
-#             }
-#         ],
-#         "footer": {
-#             "text": "-Detroit become human"
-#         }
-#         # "username" : input('username: ')
-#     }
+def send_mess():
+    # webhook url, from here: https://i.imgur.com/f9XnAew.png
+    url = "https://discord.com/api/webhooks/1067882979755573279/uN0iiImgu5hUN5fS-O2WanxrPILQQKuBV8RwLK4_vOMpiw2s1_-SxLIRsNaB3FIZikhw"
+
+    content = input('\nsimple message: ')
+    title = input('Embed Title: ')
+    description = input('Embed description: ')
+    username = input('username: ')
+
+    fullmess = [content, description, title]
+
+    for mess in range(len(fullmess)):
+        # print('mess', fullmess[mess])
+        for mention in mentions:
+            # print('mention', mention)
+            if mention in fullmess[mess]:
+                # print('Yousk2')
+                fullmess[mess] = fullmess[mess].replace(mention, mentions[mention])
+
+    data = {
+        "content": fullmess[0],
+        "embeds": [
+            {
+                "type": "rich",
+                "title": fullmess[2],
+                "description": ''+fullmess[1],
+                "color": 0xFBE214
+            }
+        ],
+        "footer": {
+            "text": "-Detroit become human"
+        },
+        "username": username
+    }
+
+    # print(fullmess)
+
 
 #     result = requests.post(url, json=data)
 
@@ -31,17 +58,6 @@
 #     else:
 #         print("Payload delivered successfully, code {}.\n".format(result.status_code))
 
-    
-#     break
 
 
-
-
-
-
-import requests
-from discord import webhook, RequestsWebhookAdapter
-
-# webhook = webhook.Webhook.from_url("https://discord.com/api/webhooks/1067589071121170542/NAzZTwxFC26wpKh715FMrv94Sx9ARlWxijPfDkJZZMgehzpEsfVAONElbBIEMqv8y1Kc")
-webhook = webhook.Webhook.partial(1067589071121170542, "1067589071121170542/NAzZTwxFC26wpKh715FMrv94Sx9ARlWxijPfDkJZZMgehzpEsfVAONElbBIEMqv8y1Kc", adapter=RequestsWebhookAdapter())
-webhook.send('hello world', username='Foo')
+send_mess()
