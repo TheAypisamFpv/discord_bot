@@ -147,16 +147,22 @@ def updatebot(response_):
             "message_id": "",
             "fail_if_not_exists": True
         },
-        "embeds": [{
-            "type": "rich",
-            "description": " ",
-            "title": " ",
-            "color": 0xdddddd,
-            "fields": [{
-                "name": "",
-                "value": "\u200B"
-            }]
-        }
+        "embeds": [
+            {
+                "type": "rich",
+                "description": " ",
+                "title": " ",
+                "color": 0xdddddd,
+                "footer": {
+                    "text": ""
+                },
+                "fields": [
+                    {
+                        "name": "",
+                        "value": "\u200B"
+                    }
+                ]
+            }
         ]
     }
 
@@ -174,17 +180,21 @@ def updatebot(response_):
             day_change.append(i+1)
 
     day_change.append(len(response_)+1)
+    
+    print(f"\nlen response_ : {len(response_)}\n")
 
     div = ""
     d = 0
-    for h in range(len(response_)):
-        if h == day_change[d]:
+    for hour in range(len(response_)):
+        if hour == day_change[d]:
             d = d+1
             div = ""
 
-        room = str(response_[h]['salles'][0]['nomSalle'])
-        title = str(response_[h]["title"]) + '\n'
-        hour = str(response_[h]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[h]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        room = str(response_[hour]['salles'][0]['nomSalle'])
+        title = str(response_[hour]["title"]) + '\n'
+        hour = str(response_[hour]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[hour]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+
+        print(f"-------\n{d} - {title}  - {hour}  - {room}\n")
 
         div_color = 0xDDDDDD
 
@@ -198,7 +208,7 @@ def updatebot(response_):
             title = "Soutenance - Exposé (en fonction de votre groupe)\n"
 
         if title == "Contrôle - Examen\n" or title == "Soutenance - Exposé\n":
-            Examen = response_[h]["start"].partition("T")
+            Examen = response_[hour]["start"].partition("T")
             Examen_hour = Examen[2].removesuffix(timezone)
             Examen_date = Examen[0].split("-")
             time_zone = int(timezone[-1])
@@ -214,9 +224,11 @@ def updatebot(response_):
         div = div + title + hour
         day[d] = [div, div_color]
 
+    
     for i in range(len(day)):
-        if day[i] == "":
-            day[i] = "jour férié"
+        print(f"\n len jour {i} : {len(day[i])}\n")
+        if len(day[i]) != 2:
+            day[i] = ["Jour férié", 0x555555]
 
     for d in range(-1, len(day)):
 
@@ -247,8 +259,8 @@ def updatebot(response_):
             ]
         if d == 4:
             data["footer"] = {
-                "text": "source: https://ent.cesi.fr/api/seance/",
-                "icon_url": "https://yt3.ggpht.com/ytc/AMLnZu-r9SK3rtCm-hF3UlW1nolyr8mIBJS10FBnIKFDHw=s900-c-k-c0x00ffffff-no-rj"
+                # "text": "source: https://ent.cesi.fr/api/seance/"
+                "text": "- Detroid: Become Human"
             }
 
         if debug_:
