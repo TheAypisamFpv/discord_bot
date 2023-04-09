@@ -3,6 +3,7 @@ import calendar
 import json
 import locale
 import time
+from matplotlib.dates import HOURS_PER_DAY
 
 import requests
 from redmail import outlook
@@ -183,18 +184,57 @@ def updatebot(response_):
     
     print(f"\nlen response_ : {len(response_)}\n")
 
+    lundi_day    = int(str(start_week)[8::])
+    mardi_day    = int(str(start_week + datetime.timedelta(days=1))[8::])
+    mercredi_day = int(str(start_week + datetime.timedelta(days=2))[8::])
+    jeudi_day    = int(str(start_week + datetime.timedelta(days=3))[8::])
+    vendredi_day = int(str(start_week + datetime.timedelta(days=4))[8::])
+
+    week_day = [lundi_day, mardi_day, mercredi_day, jeudi_day, vendredi_day]
+
+
+    print(f"lundi    : {lundi_day}\nmardi    : {mardi_day}\nmercredi : {mercredi_day}\njeudi    : {jeudi_day}\nvendredi : {vendredi_day}\n")
+
+
+    week_class = []
+    for hour in range(len(response_)):
+        class_day = int(str(response_[hour]["start"].partition('T')[0][8::]))
+        # append class_day to week_class if not already in
+        if class_day not in week_class:
+            week_class.append(class_day)
+
+    print(f"week_class : {week_class}\n")
+
+    jours_ferié = []
+    for day_ in week_day:
+        if day_ not in week_class:
+            jours_ferié.append(day_)
+
+    print(f"jours_ferié : {jours_ferié}\n")
+
+    print("\n----------------------------------------\n")
+
     div = ""
     d = 0
-    for hour in range(len(response_)):
-        if hour == day_change[d]:
+    hour_ = 0
+    for hour_ in range(len(response_)):
+        if hour_ == day_change[d]:
             d = d+1
             div = ""
+            print("\n----------------------------------------\n")
+          
 
-        room = str(response_[hour]['salles'][0]['nomSalle'])
-        title = str(response_[hour]["title"]) + '\n'
-        hour = str(response_[hour]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[hour]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        room  = str(response_[hour_]['salles'][0]['nomSalle'])
+        title = str(response_[hour_]["title"]) + '\n'
+        hour  = str(response_[hour_]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[hour_]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        _day_ = int(str(response_[hour_]["start"].partition("T")[0].split("-")[2]))
 
-        print(f"-------\n{d} - {title}  - {hour}  - {room}\n")
+        # get index of day in week_day
+        real_d = week_day.index(_day_)
+
+        
+
+        print(f"-------\n{_day_} - {title}  - {hour}  - {room}\n")
 
         div_color = 0xDDDDDD
 
@@ -207,11 +247,11 @@ def updatebot(response_):
         if title == "Soutenance - Exposé\n":
             title = "Soutenance - Exposé (en fonction de votre groupe)\n"
 
-        if title == "Contrôle - Examen\n" or title == "Soutenance - Exposé\n":
-            Examen = response_[hour]["start"].partition("T")
+        if (title == "Contrôle - Examen\n") or (title == "Soutenance - Exposé\n"):
+            Examen      = response_[hour_]["start"].partition("T")
             Examen_hour = Examen[2].removesuffix(timezone)
             Examen_date = Examen[0].split("-")
-            time_zone = int(timezone[-1])
+            time_zone   = int(timezone[-1])
             Examen_hour = f"{(int(Examen_hour[0:2]) - time_zone):0=2d}{Examen_hour[2:]}"
 
             Examen_time = calendar.timegm(datetime.datetime(int(Examen_date[0]), int(Examen_date[1]), int(Examen_date[2]), int(Examen_hour.partition(":")[0]), int(Examen_hour.partition(":")[2])).timetuple())
@@ -222,14 +262,14 @@ def updatebot(response_):
             div_color = 0xFBE214
 
         div = div + title + hour
-        day[d] = [div, div_color]
+        day[real_d] = [div, div_color]
 
-    
-    for i in range(len(day)):
-        print(f"\n len jour {i} : {len(day[i])}\n")
-        if len(day[i]) != 2:
-            day[i] = ["Jour férié", 0x555555]
+    for d in range(len(day)):
+        if day[d] == "":
+            day[d] = ["Jour férié", 0x555555]
+            print(f"-------\n{_day_} - Jour férié\n")
 
+    print("\n\nSending to main channel...")
     for d in range(-1, len(day)):
 
         if d == -1:
@@ -318,6 +358,8 @@ def updatebot(response_):
         }
     ]
 
+    print("\n\nSending to English channel")
+    print(data_en["embeds"], '\n')
     if post_:
         for url in url_bot_english:
             result = requests.post(url, json=data_en)
@@ -328,6 +370,8 @@ def updatebot(response_):
             else:
                 if debug_:
                     print("Payload delivered successfully, code {}.".format(result.status_code))
+    else:
+        print("--ERROR--  post_ is set to {}".format(post_))
 
 
 def main():
