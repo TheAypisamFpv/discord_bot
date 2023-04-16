@@ -34,9 +34,6 @@ colors = {
 }
 
 
-if DEBUG:
-    print('')
-
 response_ = []
 
 null = None
@@ -67,7 +64,7 @@ end_week = start_week + datetime.timedelta(days=6)
 timezone = str(":00+0" + str(time.localtime().tm_hour - time.gmtime().tm_hour))
 
 if DEBUG:
-    print("___|\n👉 |", "Creating week dates...")
+    print("___\n👉 |", "Creating week dates...")
     print("✅ |", today.strftime("%d/%m/%Y"), timezone)
     print("✅ |", start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
 
@@ -243,7 +240,7 @@ def updatebot(response_):
 
     if DEBUG:
         print(f"✅ | jours_ferié : {jours_ferié}\n")
-        print("\n----------------------------------------\n")
+        print("✅ |----------------------------------------\n")
 
     div = ""
     d = 0
@@ -253,7 +250,7 @@ def updatebot(response_):
             d = d+1
             div = ""
             if DEBUG:
-                print("\n----------------------------------------\n")
+                print("✅ |----------------------------------------\n")
 
         room = str(response_[hour_]['salles'][0]['nomSalle'])
         title = str(response_[hour_]["title"]) + '\n'
@@ -304,9 +301,7 @@ def updatebot(response_):
             print(f"✅ | -------\n\
                     ✅ | {_day_} - Jour férié\n")
 
-    print("\n\n\
-          \n👉 | Sending to main channel..."
-          )
+    print("___|\n👉 | Sending to main channel...")
 
     for d in range(-1, len(day)):
 
@@ -397,9 +392,7 @@ def updatebot(response_):
         }
     ]
 
-    print("\n\n\
-          \n👉 | Sending to English channel"
-          )
+    print("___|\n👉 | Sending to English channel")
 
     print("✅ | data_en['embeds']", data_en["embeds"], '\n')
 
@@ -409,13 +402,13 @@ def updatebot(response_):
             try:
                 result.raise_for_status()
             except requests.exceptions.HTTPError as err:
-                print("\n❌ |   ", err)
+                print("❌ |   ", err)
             else:
                 if DEBUG:
                     print("✅ |", "Payload delivered successfully, code {}.".format(
                         result.status_code))
     else:
-        print("\n❌ | ", "post_ is set to {}".format(post_))
+        print("❌ | ", "post_ is set to {}".format(post_))
 
 
 def main():
@@ -448,7 +441,7 @@ def main():
             print("❌ |", "no ent data found")
 
     if DEBUG:
-        print('')
+        print("___|")
 
 
 main()
