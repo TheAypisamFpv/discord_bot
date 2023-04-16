@@ -1,20 +1,19 @@
-import datetime
 import calendar
+import datetime
+from doctest import debug
 import json
 import locale
 import time
-from matplotlib.dates import HOURS_PER_DAY
 
 import requests
-from redmail import outlook
 from bs4 import BeautifulSoup
 from webbot import Browser
 
 locale.setlocale(locale.LC_TIME, 'fr_FR')
 
-debug_ = True
+DEBUG = True
 
-post_ = True
+post_ = False
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
@@ -35,7 +34,7 @@ colors = {
 }
 
 
-if debug_:
+if DEBUG:
     print('')
 
 response_ = []
@@ -67,21 +66,29 @@ end_week = start_week + datetime.timedelta(days=6)
 
 timezone = str(":00+0" + str(time.localtime().tm_hour - time.gmtime().tm_hour))
 
-if debug_:
-    print(today.strftime("%d/%m/%Y"), timezone)
-    print(start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
+if DEBUG:
+    print("___|\n👉 |", "Creating week dates...")
+    print("✅ |", today.strftime("%d/%m/%Y"), timezone)
+    print("✅ |", start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
 
 
 def check_ent() -> bool:
     """
     return True if ent is availble
     """
+    if DEBUG:
+        print("___|\n👉 |", "check_ent()")
+        print("✅ |", "Checking if ENT is available...")
     error_code = requests.get(url).status_code
     conexion = error_code == requests.codes.ok
     return conexion, error_code
 
 
 def alert_students(error_code):
+    if DEBUG:
+        print("___|\n👉 |", "alert_students()")
+        print("✅ |", "Sending alert to students...")
+
     mess = {
         "content": "",
         "username": "Bot agenda",
@@ -89,7 +96,7 @@ def alert_students(error_code):
             {
                 "type": "rich",
                 "description": "",
-                "title": "__L'ent CESI n'a pas l'air d'être en ligne__",
+                "title": "__:warning: L'ent CESI n'a pas l'air d'être en ligne :warning:__",
                 "color": 0xFBE214,
                 "fields": [
                     {
@@ -105,18 +112,30 @@ def alert_students(error_code):
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
-        print("--ERROR--  ", err)
+        if DEBUG:
+            print("❌ |", err)
     else:
-        if debug_:
-            print("Payload delivered successfully, code {}.".format(
+        if DEBUG:
+            print("✅ |", "Alert sent")
+            print("✅ |", "Payload delivered successfully, code {}.".format(
                 result.status_code))
 
 
 def get_cours(_calendar_url_):
+    if DEBUG:
+        print("___|\n👉 |", "get_cours()")
+        print("✅ |", "Getting cours from url :", _calendar_url_)
+        print("✅ |", "opening browser...")
+
     response_ = ""
     web = Browser()
+    if DEBUG:
+        print("✅ |", "browser opened")
 
     web.go_to(url)
+
+    if DEBUG:
+        print("___|\n👉 |", "login in to ent...")
 
     web.type(username, into='login', id='login')
     web.click('Valider', id='submit')
@@ -124,22 +143,31 @@ def get_cours(_calendar_url_):
     web.type(password, into='Password', id='passwordInput')
     web.click('Connexion', id='submitButton')
 
+    if DEBUG:
+        print("✅ |", "loged in to ent")
+        print("___|\n👉 |", "going to calendar url...")
+
     web.go_to(_calendar_url_)
 
-    if debug_:
-        print("good url")
+    if web.get_current_url() != _calendar_url_:
+        print("❌ |", "no response from url :", _calendar_url_)
+        return response_, False
+
+    if DEBUG:
+        print("✅ |", "calendar url opened")
+        print("✅ |", "getting ent data...")
 
     content = web.get_page_source()
     response_ = BeautifulSoup(content, features="html.parser").get_text()
     response_ = json.loads(response_)
-    if debug_:
-        print(response_.__class__)
-        print(response_)
 
     return response_, True
 
 
 def updatebot(response_):
+    if DEBUG:
+        print("___|\n👉 |", "updatebot()")
+        print("✅ |", "Updating bot...")
 
     data = {
         "content": "",
@@ -181,20 +209,22 @@ def updatebot(response_):
             day_change.append(i+1)
 
     day_change.append(len(response_)+1)
-    
-    print(f"\nlen response_ : {len(response_)}\n")
 
-    lundi_day    = int(str(start_week)[8::])
-    mardi_day    = int(str(start_week + datetime.timedelta(days=1))[8::])
+    lundi_day = int(str(start_week)[8::])
+    mardi_day = int(str(start_week + datetime.timedelta(days=1))[8::])
     mercredi_day = int(str(start_week + datetime.timedelta(days=2))[8::])
-    jeudi_day    = int(str(start_week + datetime.timedelta(days=3))[8::])
+    jeudi_day = int(str(start_week + datetime.timedelta(days=3))[8::])
     vendredi_day = int(str(start_week + datetime.timedelta(days=4))[8::])
 
     week_day = [lundi_day, mardi_day, mercredi_day, jeudi_day, vendredi_day]
 
-
-    print(f"lundi    : {lundi_day}\nmardi    : {mardi_day}\nmercredi : {mercredi_day}\njeudi    : {jeudi_day}\nvendredi : {vendredi_day}\n")
-
+    if DEBUG:
+        print(f"✅ | lundi    : {lundi_day}\n\
+                ✅ | mardi    : {mardi_day}\n\
+                ✅ | mercredi : {mercredi_day}\n\
+                ✅ | jeudi    : {jeudi_day}\n\
+                ✅ | vendredi : {vendredi_day}\n"
+              )
 
     week_class = []
     for hour in range(len(response_)):
@@ -203,16 +233,17 @@ def updatebot(response_):
         if class_day not in week_class:
             week_class.append(class_day)
 
-    print(f"week_class : {week_class}\n")
+    if DEBUG:
+        print(f"✅ | week_class : {week_class}\n")
 
     jours_ferié = []
     for day_ in week_day:
         if day_ not in week_class:
             jours_ferié.append(day_)
 
-    print(f"jours_ferié : {jours_ferié}\n")
-
-    print("\n----------------------------------------\n")
+    if DEBUG:
+        print(f"✅ | jours_ferié : {jours_ferié}\n")
+        print("\n----------------------------------------\n")
 
     div = ""
     d = 0
@@ -221,20 +252,22 @@ def updatebot(response_):
         if hour_ == day_change[d]:
             d = d+1
             div = ""
-            print("\n----------------------------------------\n")
-          
+            if DEBUG:
+                print("\n----------------------------------------\n")
 
-        room  = str(response_[hour_]['salles'][0]['nomSalle'])
+        room = str(response_[hour_]['salles'][0]['nomSalle'])
         title = str(response_[hour_]["title"]) + '\n'
-        hour  = str(response_[hour_]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[hour_]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
-        _day_ = int(str(response_[hour_]["start"].partition("T")[0].split("-")[2]))
+        hour = str(response_[hour_]["start"].partition("T")[2].removesuffix(
+            timezone)) + " - " + str(response_[hour_]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        _day_ = int(
+            str(response_[hour_]["start"].partition("T")[0].split("-")[2]))
 
         # get index of day in week_day
         real_d = week_day.index(_day_)
 
-        
-
-        print(f"-------\n{_day_} - {title}  - {hour}  - {room}\n")
+        if DEBUG:
+            print(f"✅ | -------\n\
+                    ✅ | {_day_} - {title}  - {hour}  - {room}\n")
 
         div_color = 0xDDDDDD
 
@@ -248,13 +281,14 @@ def updatebot(response_):
             title = "Soutenance - Exposé (en fonction de votre groupe)\n"
 
         if (title == "Contrôle - Examen\n") or (title == "Soutenance - Exposé\n"):
-            Examen      = response_[hour_]["start"].partition("T")
+            Examen = response_[hour_]["start"].partition("T")
             Examen_hour = Examen[2].removesuffix(timezone)
             Examen_date = Examen[0].split("-")
-            time_zone   = int(timezone[-1])
+            time_zone = int(timezone[-1])
             Examen_hour = f"{(int(Examen_hour[0:2]) - time_zone):0=2d}{Examen_hour[2:]}"
 
-            Examen_time = calendar.timegm(datetime.datetime(int(Examen_date[0]), int(Examen_date[1]), int(Examen_date[2]), int(Examen_hour.partition(":")[0]), int(Examen_hour.partition(":")[2])).timetuple())
+            Examen_time = calendar.timegm(datetime.datetime(int(Examen_date[0]), int(Examen_date[1]), int(
+                Examen_date[2]), int(Examen_hour.partition(":")[0]), int(Examen_hour.partition(":")[2])).timetuple())
 
             Examen_description = f":warning: <t:{Examen_time}:R> :warning:"
             hour = hour.removesuffix('\n') + Examen_description + '\n'
@@ -267,9 +301,13 @@ def updatebot(response_):
     for d in range(len(day)):
         if day[d] == "":
             day[d] = ["Jour férié", 0x555555]
-            print(f"-------\n{_day_} - Jour férié\n")
+            print(f"✅ | -------\n\
+                    ✅ | {_day_} - Jour férié\n")
 
-    print("\n\nSending to main channel...")
+    print("\n\n\
+          \n👉 | Sending to main channel..."
+          )
+
     for d in range(-1, len(day)):
 
         if d == -1:
@@ -303,21 +341,22 @@ def updatebot(response_):
                 "text": "- Detroid: Become Human"
             }
 
-        if debug_:
-            print(data["embeds"], '\n')
+        if DEBUG:
+            print("✅ | data['embeds']", data["embeds"], '\n')
 
         if post_:
             result = requests.post(url_bot, json=data)
             try:
                 result.raise_for_status()
             except requests.exceptions.HTTPError as err:
-                print("--ERROR--  ", err)
+                print("❌ |", err)
             else:
-                if debug_:
-                    print("Payload delivered successfully, code {}.".format(result.status_code))
-                    print(d)
+                if DEBUG:
+                    print("✅ |", "Payload delivered successfully, code {}.".format(
+                        result.status_code))
+                    print("✅ |", d)
         else:
-            print("--ERROR--  post_ is set to {}".format(post_))
+            print("❌ | post_ is set to {}".format(post_))
 
         d+1
 
@@ -358,38 +397,57 @@ def updatebot(response_):
         }
     ]
 
-    print("\n\nSending to English channel")
-    print(data_en["embeds"], '\n')
+    print("\n\n\
+          \n👉 | Sending to English channel"
+          )
+
+    print("✅ | data_en['embeds']", data_en["embeds"], '\n')
+
     if post_:
         for url in url_bot_english:
             result = requests.post(url, json=data_en)
             try:
                 result.raise_for_status()
             except requests.exceptions.HTTPError as err:
-                print("--ERROR--  ", err)
+                print("\n❌ |   ", err)
             else:
-                if debug_:
-                    print("Payload delivered successfully, code {}.".format(result.status_code))
+                if DEBUG:
+                    print("✅ |", "Payload delivered successfully, code {}.".format(
+                        result.status_code))
     else:
-        print("--ERROR--  post_ is set to {}".format(post_))
+        print("\n❌ | ", "post_ is set to {}".format(post_))
 
 
 def main():
+    if DEBUG:
+        print("___|\n👉 |", "main()")
+
     if not check_ent():
+        if DEBUG:
+            print("❌ |", "Connection to ENT failed")
         alert_students()
         return
 
-    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(start_week, end_week)
-    
-    if debug_:
-        print(calendar_url)
+    if DEBUG:
+        print("✅ |", "Connection to ENT successful")
+        print("___|\n👉 |", "creating calendar_url")
+
+    calendar_url = 'https://ent.cesi.fr/api/seance/all?start={}&end={}&codePersonne=2427950&_=1665606186346'.format(
+        start_week, end_week)
+
+    if DEBUG:
+        print("✅ |", calendar_url)
+
     response_, is_good = get_cours(calendar_url)
     if is_good == True:
         updatebot(response_)
-        if debug_:
-            print("bonne chance pour cette semaine")
+        if DEBUG:
+            print("✅ | bonne chance pour cette semaine")
+    else:
+        if DEBUG:
+            print("❌ |", "no ent data found")
 
-    if debug_:
+    if DEBUG:
         print('')
 
 
