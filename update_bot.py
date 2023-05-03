@@ -13,7 +13,7 @@ locale.setlocale(locale.LC_TIME, 'fr_FR')
 
 DEBUG = True
 
-post_ = False
+post_ = True
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
