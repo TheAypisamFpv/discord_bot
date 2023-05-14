@@ -13,7 +13,7 @@ locale.setlocale(locale.LC_TIME, 'fr_FR')
 
 DEBUG = True
 
-post_ = True
+post_ = False
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
@@ -268,6 +268,7 @@ def updatebot(response_):
 
         div_color = 0xDDDDDD
 
+        english_room = ""
         if title == "Anglais\n":
             title = "Anglais (en fonction de votre groupe)\n"
             hour = '13:30 - 16:30 \n'
@@ -355,60 +356,61 @@ def updatebot(response_):
 
         d+1
 
-    # sending for the english channel
-    data_en = {
-        "content": "",
-        "username": "Bot agenda",
-        "message_reference": {
-            "message_id": "",
-            "fail_if_not_exists": True
-        },
-        "embeds": [{
-            "type": "rich",
-            "description": " ",
-            "title": " ",
-            "color": 0xFBE214,
-            "fields": [{
-                "name": "",
-                "value": "\u200B"
-            }]
-        }
-        ]
-    }
-
-    data_en["embeds"] = [
-        {
-            "type": "rich",
-            "description": "",
-            "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B").capitalize()+"__",
-            "color": english_room_color,
-            # "url": ID_message[d],
-            "fields": [
-                {
-                    "name": f' Anglais\nSalle {english_room}',
+    if english_room != "":
+        # sending for the english channel
+        data_en = {
+            "content": "",
+            "username": "Bot agenda",
+            "message_reference": {
+                "message_id": "",
+                "fail_if_not_exists": True
+            },
+            "embeds": [{
+                "type": "rich",
+                "description": " ",
+                "title": " ",
+                "color": 0xFBE214,
+                "fields": [{
+                    "name": "",
                     "value": "\u200B"
-                }
+                }]
+            }
             ]
         }
-    ]
 
-    print("___|\n👉 | Sending to English channel")
+        data_en["embeds"] = [
+            {
+                "type": "rich",
+                "description": "",
+                "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B").capitalize()+"__",
+                "color": english_room_color,
+                # "url": ID_message[d],
+                "fields": [
+                    {
+                        "name": f' Anglais\nSalle {english_room}',
+                        "value": "\u200B"
+                    }
+                ]
+            }
+        ]
 
-    print("✅ | data_en['embeds']", data_en["embeds"], '\n')
+        print("___|\n👉 | Sending to English channel")
 
-    if post_:
-        for url in url_bot_english:
-            result = requests.post(url, json=data_en)
-            try:
-                result.raise_for_status()
-            except requests.exceptions.HTTPError as err:
-                print("❌ |   ", err)
-            else:
-                if DEBUG:
-                    print("✅ |", "Payload delivered successfully, code {}.".format(
-                        result.status_code))
-    else:
-        print("❌ | ", "post_ is set to {}".format(post_))
+        print("✅ | data_en['embeds']", data_en["embeds"], '\n')
+
+        if post_:
+            for url in url_bot_english:
+                result = requests.post(url, json=data_en)
+                try:
+                    result.raise_for_status()
+                except requests.exceptions.HTTPError as err:
+                    print("❌ |   ", err)
+                else:
+                    if DEBUG:
+                        print("✅ |", "Payload delivered successfully, code {}.".format(
+                            result.status_code))
+        else:
+            print("❌ | ", "post_ is set to {}".format(post_))
 
 
 def main():
