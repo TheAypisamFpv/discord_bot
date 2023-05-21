@@ -246,6 +246,7 @@ def updatebot(response_):
     div = ""
     d = 0
     hour_ = 0
+    english_room = ""
     for hour_ in range(len(response_)):
         if hour_ == day_change[d]:
             d = d+1
@@ -270,7 +271,7 @@ def updatebot(response_):
 
         div_color = 0xDDDDDD
 
-        english_room = ""
+        
         if title == "Anglais\n":
             title = "Anglais (en fonction de votre groupe)\n"
             hour = '13:30 - 16:30 \n'
