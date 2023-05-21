@@ -1,13 +1,4 @@
-import calendar
-import datetime
-from doctest import debug
-import json
-import locale
-import time
-import trace
-import traceback
-
-import requests
+import calendar, datetime, json, locale, traceback, requests
 from bs4 import BeautifulSoup
 from webbot import Browser
 
