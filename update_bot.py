@@ -1,4 +1,4 @@
-import calendar, datetime, json, locale, traceback, requests
+import calendar, datetime, json, locale, traceback, requests, sys
 from bs4 import BeautifulSoup
 from webbot import Browser
 
@@ -42,6 +42,7 @@ URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxe
 URL_ent = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
 URL_ent_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
 
+# deepcode ignore NoHardcodedCredentials: <don't care, it's private>
 USERNAME = 'samuel.courtin@viacesi.fr'
 PASSWORD = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
@@ -294,7 +295,7 @@ def updatebot(response_):
         div = div + title + hour
         if len(div) > 256:
             raise Exception(f"Too many characters in div, day {real_d}")
-            exit()
+            sys.exit()
             
         day[real_d] = [div, div_color]
 
