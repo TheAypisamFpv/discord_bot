@@ -1,4 +1,4 @@
-# import requests  # dependency
+import requests  # dependency
 
 global mentions
 mentions = {
@@ -13,7 +13,8 @@ for mention in mentions:
 
 def send_mess():
     # webhook url, from here: https://i.imgur.com/f9XnAew.png
-    url = "https://discord.com/api/webhooks/1067882979755573279/uN0iiImgu5hUN5fS-O2WanxrPILQQKuBV8RwLK4_vOMpiw2s1_-SxLIRsNaB3FIZikhw"
+    URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxeo0EejO-qAc1jVekCFwxNVlhjGy_WmfU9kBu5CR70mpTvWxVFKci7V"
+    URL_general = "https://discord.com/api/webhooks/1113755918459482113/J_YJ_KnN2GYcPiHQsBpAbwoyh6wFdycmwOzCaD4_tshy-75sI7N4tDF4gJc2LjuKoctX"
 
     content = input('\nsimple message: ')
     title = input('Embed Title: ')
@@ -46,17 +47,17 @@ def send_mess():
         "username": username
     }
 
-    # print(fullmess)
+    print(fullmess)
 
 
-#     result = requests.post(url, json=data)
+    result = requests.post(URL_info, json=data)
 
-#     try:
-#         result.raise_for_status()
-#     except requests.exceptions.HTTPError as err:
-#         print(err)
-#     else:
-#         print("Payload delivered successfully, code {}.\n".format(result.status_code))
+    try:
+        result.raise_for_status()
+    except requests.exceptions.HTTPError as err:
+        print(err)
+    else:
+        print("Payload delivered successfully, code {}.\n".format(result.status_code))
 
 
 

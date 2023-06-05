@@ -1,6 +1,5 @@
 import calendar
 import datetime
-from doctest import debug
 import json
 import locale
 import time
@@ -13,7 +12,7 @@ locale.setlocale(locale.LC_TIME, 'fr_FR')
 
 DEBUG = True
 
-post_ = True
+post_ = False
 
 
 # https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
@@ -40,17 +39,17 @@ null = None
 false = False
 
 
-url_bot = "https://discord.com/api/webhooks/1067532868928151662/XLQ4M4j_v0LGzXLp7wtS7ScPm5HNxE9O_5krtiVLWOA7sVnncrHgGT2TvQjw6UAhRGWV"
-url_bot_english = ["https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc",
+URL_agenda = "https://discord.com/api/webhooks/1067532868928151662/XLQ4M4j_v0LGzXLp7wtS7ScPm5HNxE9O_5krtiVLWOA7sVnncrHgGT2TvQjw6UAhRGWV"
+URL_english = ["https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc",
                    "https://discord.com/api/webhooks/1067913290761654404/biC9E1gE6AIMs0TRCLXiOmAERYoJL3F6bLXyXXk_0vuOC8iza4n363m2zdTy404FQemh"]
 
-url_bot_ent = "https://discord.com/api/webhooks/1067882979755573279/uN0iiImgu5hUN5fS-O2WanxrPILQQKuBV8RwLK4_vOMpiw2s1_-SxLIRsNaB3FIZikhw"
+URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxeo0EejO-qAc1jVekCFwxNVlhjGy_WmfU9kBu5CR70mpTvWxVFKci7V"
 
-url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
-url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
+URL_ent = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
+URL_ent_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
 
-username = 'samuel.courtin@viacesi.fr'
-password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+USERNAME = 'samuel.courtin@viacesi.fr'
+PASSWORD = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
 
 today = datetime.date.today()
@@ -76,7 +75,7 @@ def check_ent() -> bool:
     if DEBUG:
         print("___|\n👉 |", "check_ent()")
         print("✅ |", "Checking if ENT is available...")
-    error_code = requests.get(url).status_code
+    error_code = requests.get(URL_ent).status_code
     conexion = error_code == requests.codes.ok
     return conexion, error_code
 
@@ -105,7 +104,7 @@ def alert_students(error_code):
         ]
     }
 
-    result = requests.post(url_bot_ent, json=mess)
+    result = requests.post(URL_info, json=mess)
     try:
         result.raise_for_status()
     except requests.exceptions.HTTPError as err:
@@ -129,15 +128,15 @@ def get_cours(_calendar_url_):
     if DEBUG:
         print("✅ |", "browser opened")
 
-    web.go_to(url)
+    web.go_to(URL_ent)
 
     if DEBUG:
         print("___|\n👉 |", "login in to ent...")
 
-    web.type(username, into='login', id='login')
+    web.type(USERNAME, into='login', id='login')
     web.click('Valider', id='submit')
 
-    web.type(password, into='Password', id='passwordInput')
+    web.type(PASSWORD, into='Password', id='passwordInput')
     web.click('Connexion', id='submitButton')
 
     if DEBUG:
@@ -340,7 +339,7 @@ def updatebot(response_):
             print("✅ | data['embeds']", data["embeds"], '\n')
 
         if post_:
-            result = requests.post(url_bot, json=data)
+            result = requests.post(URL_agenda, json=data)
             try:
                 result.raise_for_status()
             except requests.exceptions.HTTPError as err:
@@ -397,7 +396,7 @@ def updatebot(response_):
     print("✅ | data_en['embeds']", data_en["embeds"], '\n')
 
     if post_:
-        for url in url_bot_english:
+        for url in URL_english:
             result = requests.post(url, json=data_en)
             try:
                 result.raise_for_status()
