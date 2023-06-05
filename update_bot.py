@@ -1,10 +1,4 @@
-import calendar
-import datetime
-import json
-import locale
-import time
-
-import requests
+import calendar, datetime, json, locale, traceback, requests
 from bs4 import BeautifulSoup
 from webbot import Browser
 
@@ -60,11 +54,10 @@ else:
 
 end_week = start_week + datetime.timedelta(days=6)
 
-timezone = str(":00+0" + str(time.localtime().tm_hour - time.gmtime().tm_hour))
+
 
 if DEBUG:
     print("___\n👉 |", "Creating week dates...")
-    print("✅ |", today.strftime("%d/%m/%Y"), timezone)
     print("✅ |", start_week.strftime("%d/%m/%Y"), end_week.strftime("%d/%m/%Y"))
 
 
@@ -244,6 +237,7 @@ def updatebot(response_):
     div = ""
     d = 0
     hour_ = 0
+    english_room = ""
     for hour_ in range(len(response_)):
         if hour_ == day_change[d]:
             d = d+1
@@ -253,8 +247,9 @@ def updatebot(response_):
 
         room = str(response_[hour_]['salles'][0]['nomSalle'])
         title = str(response_[hour_]["title"]) + '\n'
-        hour = str(response_[hour_]["start"].partition("T")[2].removesuffix(
-            timezone)) + " - " + str(response_[hour_]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
+        timezone = str(response_[hour_]["start"].partition("T")[2][5::])
+        print('timezone', timezone)
+        hour = str(response_[hour_]["start"].partition("T")[2].removesuffix(timezone)) + " - " + str(response_[hour_]["end"].partition("T")[2].removesuffix(timezone)) + '\n\n'
         _day_ = int(
             str(response_[hour_]["start"].partition("T")[0].split("-")[2]))
 
@@ -266,32 +261,41 @@ def updatebot(response_):
                     ✅ | {_day_} - {title}  - {hour}  - {room}\n")
 
         div_color = 0xDDDDDD
-
+        
         if title == "Anglais\n":
             title = "Anglais (en fonction de votre groupe)\n"
             hour = '13:30 - 16:30 \n'
             english_room = room
             english_room_color = colors[english_room[0]]
 
-        if title == "Soutenance - Exposé\n":
-            title = "Soutenance - Exposé (en fonction de votre groupe)\n"
-
-        if (title == "Contrôle - Examen\n") or (title == "Soutenance - Exposé\n"):
+        if title.startswith("Contrôle") or title.startswith("Soutenance"):
             Examen = response_[hour_]["start"].partition("T")
             Examen_hour = Examen[2].removesuffix(timezone)
+            
+            print('Examen_hour, timezone', Examen_hour, timezone)
+            
             Examen_date = Examen[0].split("-")
             time_zone = int(timezone[-1])
             Examen_hour = f"{(int(Examen_hour[0:2]) - time_zone):0=2d}{Examen_hour[2:]}"
 
-            Examen_time = calendar.timegm(datetime.datetime(int(Examen_date[0]), int(Examen_date[1]), int(
-                Examen_date[2]), int(Examen_hour.partition(":")[0]), int(Examen_hour.partition(":")[2])).timetuple())
+            Examen_time = calendar.timegm(datetime.datetime(int(Examen_date[0]), int(Examen_date[1]), int(Examen_date[2]), int(Examen_hour.partition(":")[0]), int(Examen_hour.partition(":")[2][0:2])).timetuple())
 
-            Examen_description = f":warning: <t:{Examen_time}:R> :warning:"
+            Examen_description = f":warning: <t:{Examen_time}:R> :warning:\n"
             hour = hour.removesuffix('\n') + Examen_description + '\n'
+
+            
 
             div_color = 0xFBE214
 
+        if day[real_d] != "":
+            if day[real_d][1] == 0xFBE214:
+                div_color = 0xFBE214
+
         div = div + title + hour
+        if len(div) > 256:
+            raise Exception(f"Too many characters in div, day {real_d}")
+            exit()
+            
         day[real_d] = [div, div_color]
 
     for d in range(len(day)):
@@ -344,6 +348,7 @@ def updatebot(response_):
                 result.raise_for_status()
             except requests.exceptions.HTTPError as err:
                 print("❌ |", err)
+                print(traceback.format_exc())
             else:
                 if DEBUG:
                     print("✅ |", "Payload delivered successfully, code {}.".format(
@@ -354,46 +359,47 @@ def updatebot(response_):
 
         d+1
 
-    # sending for the english channel
-    data_en = {
-        "content": "",
-        "username": "Bot agenda",
-        "message_reference": {
-            "message_id": "",
-            "fail_if_not_exists": True
-        },
-        "embeds": [{
-            "type": "rich",
-            "description": " ",
-            "title": " ",
-            "color": 0xFBE214,
-            "fields": [{
-                "name": "",
-                "value": "\u200B"
-            }]
-        }
-        ]
-    }
-
-    data_en["embeds"] = [
-        {
-            "type": "rich",
-            "description": "",
-            "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B").capitalize()+"__",
-            "color": english_room_color,
-            # "url": ID_message[d],
-            "fields": [
-                {
-                    "name": f' Anglais\nSalle {english_room}',
+    if english_room != "":
+        # sending for the english channel
+        data_en = {
+            "content": "",
+            "username": "Bot agenda",
+            "message_reference": {
+                "message_id": "",
+                "fail_if_not_exists": True
+            },
+            "embeds": [{
+                "type": "rich",
+                "description": " ",
+                "title": " ",
+                "color": 0xFBE214,
+                "fields": [{
+                    "name": "",
                     "value": "\u200B"
-                }
+                }]
+            }
             ]
         }
-    ]
 
-    print("___|\n👉 | Sending to English channel")
+        data_en["embeds"] = [
+            {
+                "type": "rich",
+                "description": "",
+                "title": "__"+(start_week + datetime.timedelta(days=2)).strftime("%A %d %B").capitalize()+"__",
+                "color": english_room_color,
+                # "url": ID_message[d],
+                "fields": [
+                    {
+                        "name": f' Anglais\nSalle {english_room}',
+                        "value": "\u200B"
+                    }
+                ]
+            }
+        ]
 
-    print("✅ | data_en['embeds']", data_en["embeds"], '\n')
+        print("___|\n👉 | Sending to English channel")
+
+        print("✅ | data_en['embeds']", data_en["embeds"], '\n')
 
     if post_:
         for url in URL_english:
