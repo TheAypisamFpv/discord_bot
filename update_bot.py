@@ -44,6 +44,7 @@ URL_ent_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viac
 
 # deepcode ignore NoHardcodedCredentials: <don't care, it's private>
 USERNAME = 'samuel.courtin@viacesi.fr'
+# deepcode ignore NoHardcodedCredentials: <don't care, it's private>
 PASSWORD = 'HRBbESMTq78chNr4qh9i8pxREftyG'
 
 
