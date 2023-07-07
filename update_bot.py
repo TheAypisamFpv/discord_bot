@@ -32,18 +32,20 @@ response_ = []
 null = None
 false = False
 
+print("___\n👉 |", "Reading credential.txt...")
 
-url_bot = "https://discord.com/api/webhooks/1067532868928151662/XLQ4M4j_v0LGzXLp7wtS7ScPm5HNxE9O_5krtiVLWOA7sVnncrHgGT2TvQjw6UAhRGWV"
-url_bot_english = ["https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc",
-                   "https://discord.com/api/webhooks/1067913290761654404/biC9E1gE6AIMs0TRCLXiOmAERYoJL3F6bLXyXXk_0vuOC8iza4n363m2zdTy404FQemh"]
+with open("credential.txt", "r") as f:
+  data = [line.partition("=")[-1].strip() for line in f.readlines()]
 
-url_bot_ent = "https://discord.com/api/webhooks/1067882979755573279/uN0iiImgu5hUN5fS-O2WanxrPILQQKuBV8RwLK4_vOMpiw2s1_-SxLIRsNaB3FIZikhw"
+print("✅ |", "credential.txt readed")
 
-url = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
-url_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
-
-username = 'samuel.courtin@viacesi.fr'
-password = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+url_bot = data[0]
+url_bot_english = [data[1], data[2]]
+url_bot_ent = data[3]
+url = data[4]
+url_redirect = data[5]
+username = data[6]
+password = data[7]
 
 
 today = datetime.date.today()
