@@ -1,4 +1,4 @@
-import calendar, datetime, json, locale, traceback, requests, sys
+import calendar, datetime, json, locale, traceback, requests, sys, get_credentials
 from bs4 import BeautifulSoup
 from webbot import Browser
 
@@ -8,16 +8,6 @@ DEBUG = True
 
 post_ = False
 
-
-# https://discord.com/api/v9/channels/1038800615494656141/messages/1039230514202153021
-
-# ID_message = ["https://discord.com/channels/1017438249494519948/1038800615494656141/1039230514202153021",
-#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230516710350918",
-#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230520279695473",
-#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230523991654561",
-#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230528282443826",
-#               "https://discord.com/channels/1017438249494519948/1038800615494656141/1039230532820684851"
-# ]
 
 
 colors = {
@@ -32,21 +22,16 @@ response_ = []
 null = None
 false = False
 
-print("___\n👉 |", "Reading credential.txt...")
 
-URL_agenda = "https://discord.com/api/webhooks/1067532868928151662/XLQ4M4j_v0LGzXLp7wtS7ScPm5HNxE9O_5krtiVLWOA7sVnncrHgGT2TvQjw6UAhRGWV"
-URL_english = ["https://discord.com/api/webhooks/1067802730833395824/qqCfC3H3BmOIAMe5qwy15rTuxjlsOSSUpZY8iXac7VE9w-7r2RU7V-05KxoAYPOnlqFc",
-                   "https://discord.com/api/webhooks/1067913290761654404/biC9E1gE6AIMs0TRCLXiOmAERYoJL3F6bLXyXXk_0vuOC8iza4n363m2zdTy404FQemh"]
+data = get_credentials.get_all()
 
-URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxeo0EejO-qAc1jVekCFwxNVlhjGy_WmfU9kBu5CR70mpTvWxVFKci7V"
-
-URL_ent = "https://wayf.cesi.fr/login?service=https%3A%2F%2Fent.cesi.fr%2Fservlet%2Fcom.jsbsoft.jtf.core.SG%3FPROC%3DIDENTIFICATION_FRONT"
-URL_ent_redirect = "https://sts.viacesi.fr/adfs/ls/?UserName=samuel.courtin@viacesi.fr"
-
-# deepcode ignore NoHardcodedCredentials: <don't care, it's private>
-USERNAME = 'samuel.courtin@viacesi.fr'
-# deepcode ignore NoHardcodedPasswords: <don't care, it's private>
-PASSWORD = 'HRBbESMTq78chNr4qh9i8pxREftyG'
+URL_agenda = data[0]
+URL_english = [data[1], data[2]]
+URL_info = data[3]
+URL_ent = data[4]
+URL_ent_redirect = data[5]
+USERNAME = data[6]
+PASSWORD = data[7]
 
 
 today = datetime.date.today()

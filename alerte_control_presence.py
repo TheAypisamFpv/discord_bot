@@ -1,6 +1,7 @@
-import requests
+from arrow import get
+import requests, get_credentials
 
-URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxeo0EejO-qAc1jVekCFwxNVlhjGy_WmfU9kBu5CR70mpTvWxVFKci7V"
+URL_info = get_credentials.URL_info()
 
 def send_alert():
   message = ":warning: <@&1067743463174582343> __***Contrôle de présence***__ :warning:"

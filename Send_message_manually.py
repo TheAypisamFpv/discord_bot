@@ -1,4 +1,8 @@
-import requests  # dependency
+import requests, get_credentials
+
+URL_info = get_credentials.URL_info()
+URL_general = get_credentials.URL_general()
+
 
 global mentions
 mentions = {
@@ -13,8 +17,7 @@ for mention in mentions:
 
 def send_mess():
   # webhook url, from here: https://i.imgur.com/f9XnAew.png
-  URL_info = "https://discord.com/api/webhooks/1115187961764511784/2CCWWVOaG86ZZxeo0EejO-qAc1jVekCFwxNVlhjGy_WmfU9kBu5CR70mpTvWxVFKci7V"
-  URL_general = "https://discord.com/api/webhooks/1113755918459482113/J_YJ_KnN2GYcPiHQsBpAbwoyh6wFdycmwOzCaD4_tshy-75sI7N4tDF4gJc2LjuKoctX"
+  
 
   content = input('\nsimple message: ')
   title = input('Embed Title: ')
